@@ -1,21 +1,24 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System;
 
 public class CanvasContainer : MonoBehaviour
-{
-    [SerializeField]
-    private GameObject mainMenuPrefab;
+{   
     private APanelViewer[] panels;
     private APanelViewer currentPanel;
 
     private void Awake()
     {
-        GameObject _cloneUI = Instantiate(mainMenuPrefab, transform);
-        panels = _cloneUI.transform.GetComponentsInChildren<APanelViewer>();
-        foreach (APanelViewer item in panels)
+        int lenght = Enum.GetValues(typeof(eStateUI)).Length;
+        panels = new APanelViewer[lenght];
+        for (int i = 0; i < lenght; i++)
         {
-            item.gameObject.SetActive(false);
-        } 
+
+            GameObject prefab = Resources.Load<GameObject>("PanelsUI/" + ((eStateUI)i).ToString());
+            GameObject _cloneUI = Instantiate(prefab, transform);
+            panels[i] = _cloneUI.transform.GetComponent<APanelViewer>();
+            panels[i].gameObject.SetActive(false);
+        }
         ActivatePanel(eStateUI.Menu);
     } 
 
